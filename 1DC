@@ -1,0 +1,105 @@
+RPC Distributed Application for Factorial Calculation using Python
+Theory (Exam Writing)
+What is RPC?
+
+RPC (Remote Procedure Call) is a protocol used in distributed systems where a client program can call a function located on a remote server as if it were a local function.
+
+RPC helps communication between:
+
+Client → sends request
+Server → processes request and sends response
+
+In this application:
+
+Client sends an integer number.
+Server calculates factorial.
+Result is returned to client.
+Architecture
++-----------+        Request         +-----------+
+|  Client   | --------------------> |  Server   |
+|           |                       |           |
+|           | <-------------------- |           |
++-----------+    Factorial Result   +-----------+
+Algorithm:
+Client Side-
+Start
+Enter integer number
+Send number to server
+Receive factorial result
+Display result
+Stop
+
+Server Side-
+Start server
+Wait for client request
+Receive number
+Calculate factorial
+Send result back to client
+Repeat
+Python RPC Program using XML-RPC
+
+Python provides built-in support for RPC using the xmlrpc library.
+
+1. Server Program
+server.py
+
+from xmlrpc.server import SimpleXMLRPCServer
+
+# Function to calculate factorial
+def factorial(n):
+    fact = 1
+
+    for i in range(1, n + 1):
+        fact = fact * i
+
+    return fact
+
+# Create server
+server = SimpleXMLRPCServer(("localhost", 8000))
+
+print("Server is running on port 8000...")
+
+# Register function
+server.register_function(factorial, "factorial")
+
+# Start server
+server.serve_forever()
+2. Client Program
+client.py
+import xmlrpc.client
+
+# Connect to server
+proxy = xmlrpc.client.ServerProxy("http://localhost:8000/")
+
+# Input from user
+num = int(input("Enter a number: "))
+
+# Remote procedure call
+result = proxy.factorial(num)
+
+# Display result
+print("Factorial =", result)
+Steps to Execute
+Step 1: Run Server
+python server.py
+
+Output:
+
+Server is running on port 8000...
+Step 2: Run Client
+
+Open another terminal and run:
+
+python client.py
+Sample Output
+Enter a number: 5
+Factorial = 120
+Advantages of RPC
+Easy communication between distributed systems
+Remote functions behave like local functions
+Reduces complexity of socket programming
+Faster development
+
+Conclusion
+
+Thus, the distributed RPC application for factorial calculation was successfully implemented using Python XML-RPC. The client remotely invokes factorial computation on the server and receives the result from the server.
