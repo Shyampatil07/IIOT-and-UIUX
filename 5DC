@@ -1,0 +1,113 @@
+Load Balancing Simulation using Python
+Theory (Exam Writing)
+What is Load Balancing?
+
+Load Balancing is the process of distributing client requests among multiple servers to improve:
+
+performance
+resource utilization
+reliability
+availability
+
+A load balancer ensures that no single server becomes overloaded.
+
+Need of Load Balancing
+Reduces server overload
+Improves response time
+Provides fault tolerance
+Efficient utilization of resources
+Load Balancing Algorithms
+1. Round Robin
+
+Requests are assigned sequentially to each server.
+
+Example:
+
+Request1 → Server1
+Request2 → Server2
+Request3 → Server3
+Request4 → Server1
+2. Least Connection
+
+Request goes to server having minimum current load.
+
+Problem Statement
+
+Write a Python program to simulate client requests and distribute them among servers using load balancing algorithms.
+
+Advantages of Load Balancing
+Better performance
+High availability
+Scalability
+Reduced response time
+Fault tolerance
+Applications
+Cloud computing
+Web servers
+Distributed systems
+Data centers
+Network traffic management
+Conclusion
+
+Thus, the simulation of client requests and distribution among servers using:
+
+Round Robin Algorithm
+Least Connection Algorithm
+
+was successfully implemented using Python.
+
+
+code-
+
+import random
+import hashlib
+servers = ["S1", "S2", "S3"]
+weights = {"S1": 1, "S2": 2, "S3": 3}
+# Sample requests (can be anything)
+requests = ["R1", "R2", "R3", "R4", "R5", "R6", "R7"]
+# ◆ 1. Round Robin
+def round_robin(requests):
+   print("\n--- Round Robin ---")
+   for i, req in enumerate(requests):
+    server = servers[i % len(servers)]
+    print(f"{req} -> {server}")
+# ◆ 2. Least Connections
+def least_connections(requests):
+  print("\n--- Least Connections ---")
+  connections = {s: 0 for s in servers}
+  for req in requests:
+    server = min(connections, key=connections.get)
+    print(f"{req} -> {server}")
+    connections[server] += 1
+# ◆ 3. Random
+def random_lb(requests):
+   print("\n--- Random ---")
+   for req in requests:
+    server = random.choice(servers)
+    print(f"{req} -> {server}")
+# ◆ 4. Weighted Round Robine
+def weighted_round_robin(requests):
+   print("\n--- Weighted Round Robin ---")
+   weighted_list = []
+   for s in servers:
+    weighted_list.extend([s] * weights[s])
+    for i, req in enumerate(requests):
+     server = weighted_list[i % len(weighted_list)]
+     print(f"{req} -> {server}")
+# ◆ 5. IP Hash
+def ip_hash(requests):
+   print("\n--- IP Hash ---")
+   for req in requests:
+    ip = req # simulate request as IP
+    hash_val = int(hashlib.md5(ip.encode()).hexdigest(), 16)
+    server = servers[hash_val % len(servers)]
+    print(f"{req} -> {server}")
+# Run all
+round_robin(requests)
+least_connections(requests)
+random_lb(requests)
+weighted_round_robin(requests)
+ip_hash(requests)
+
+
+
