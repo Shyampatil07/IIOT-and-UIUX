@@ -1,0 +1,248 @@
+Hadoop MapReduce using Python
+A) Character Counting in a Text File
+Theory (Exam Writing)
+What is MapReduce?
+
+MapReduce is a programming model in Hadoop used for processing large data sets in a distributed environment.
+
+It has two main phases:
+
+Mapper
+Reads input data
+Converts data into key-value pairs
+Reducer
+Receives mapper output
+Combines and summarizes results
+Problem Statement
+
+Design a distributed application using MapReduce under Hadoop for counting characters in a text file.
+
+Working of Character Count
+Mapper Phase
+Reads text line by line
+Emits each character with value 1
+
+Example:
+
+Input:
+
+HELLO
+
+Mapper Output:
+
+H 1
+E 1
+L 1
+L 1
+O 1
+Reducer Phase
+Groups same characters
+Adds all values
+
+Reducer Output:
+
+H 1
+E 1
+L 2
+O 1
+Python Hadoop Streaming Program
+1. Mapper Program
+mapper.py
+#!/usr/bin/env python3
+
+import sys
+
+# Read input from standard input
+for line in sys.stdin:
+
+    # Remove spaces at beginning/end
+    line = line.strip()
+
+    # Traverse each character
+    for ch in line:
+
+        # Ignore spaces
+        if ch != " ":
+
+            # Emit character and count 1
+            print(f"{ch}\t1")
+2. Reducer Program
+reducer.py
+#!/usr/bin/env python3
+
+import sys
+
+current_char = None
+current_count = 0
+
+# Read mapper output
+for line in sys.stdin:
+
+    char, count = line.strip().split("\t")
+
+    count = int(count)
+
+    # If same character
+    if current_char == char:
+        current_count += count
+
+    else:
+
+        # Print previous character count
+        if current_char:
+            print(f"{current_char}\t{current_count}")
+
+        current_char = char
+        current_count = count
+
+# Print final character
+if current_char:
+    print(f"{current_char}\t{current_count}")
+Execution Steps
+Step 1: Give Permission
+chmod +x mapper.py reducer.py
+Step 2: Run Hadoop Streaming
+hadoop jar /usr/lib/hadoop-mapreduce/hadoop-streaming.jar \
+-input input.txt \
+-output output_char \
+-mapper mapper.py \
+-reducer reducer.py
+Sample Input
+HELLO WORLD
+Sample Output
+D   1
+E   1
+H   1
+L   3
+O   2
+R   1
+W   1
+Conclusion
+
+Thus, the distributed Hadoop MapReduce application for character counting was successfully implemented using Python.       
+
+
+
+
+
+echo "hello world hello" | python mapper.py | sort | python reducer.py
+
+
+
+
+echo "big data big" | python mapper.py | sort | python reducer.py
+
+
+
+B) Word Count in a Text File
+Theory
+
+Word Count is the most popular Hadoop MapReduce application.
+
+It counts how many times each word occurs in the file.
+
+Working of Word Count
+Mapper Phase
+Reads each line
+Splits into words
+Emits word with value 1
+
+Example:
+
+Input:
+
+BIG DATA BIG
+
+Mapper Output:
+
+BIG 1
+DATA 1
+BIG 1
+Reducer Phase
+Receives same words together
+Adds counts
+
+Reducer Output:
+
+BIG 2
+DATA 1
+Python Hadoop Streaming Program
+1. Mapper Program
+mapper.py
+#!/usr/bin/env python3
+
+import sys
+
+# Read input line by line
+for line in sys.stdin:
+
+    # Remove extra spaces
+    line = line.strip()
+
+    # Split line into words
+    words = line.split()
+
+    # Emit word and count 1
+    for word in words:
+        print(f"{word}\t1")
+2. Reducer Program
+reducer.py
+#!/usr/bin/env python3
+
+import sys
+
+current_word = None
+current_count = 0
+
+# Read mapper output
+for line in sys.stdin:
+
+    word, count = line.strip().split("\t")
+
+    count = int(count)
+
+    # Same word
+    if current_word == word:
+        current_count += count
+
+    else:
+
+        # Print previous word count
+        if current_word:
+            print(f"{current_word}\t{current_count}")
+
+        current_word = word
+        current_count = count
+
+# Print last word
+if current_word:
+    print(f"{current_word}\t{current_count}")
+Execution Steps
+Step 1: Give Permission
+chmod +x mapper.py reducer.py
+Step 2: Run Hadoop Streaming
+hadoop jar /usr/lib/hadoop-mapreduce/hadoop-streaming.jar \
+-input input.txt \
+-output output_word \
+-mapper mapper.py \
+-reducer reducer.py
+Sample Input
+HADOOP BIG DATA HADOOP
+Sample Output
+BIG      1
+DATA     1
+HADOOP   2
+Advantages of Hadoop MapReduce
+Distributed processing
+Handles very large files
+Fault tolerant
+Scalable
+Faster processing
+Final Conclusion
+
+Thus, the distributed Hadoop MapReduce applications for:
+
+Character counting
+Word occurrence counting
+
+were successfully implemented using Python Mapper and Reducer programs.
