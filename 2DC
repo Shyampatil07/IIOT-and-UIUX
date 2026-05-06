@@ -1,0 +1,94 @@
+Distributed Application using RPC in Python for String Concatenation
+Theory (Exam Writing)
+What is RPC?
+
+RPC (Remote Procedure Call) is a communication mechanism in distributed systems where a client can call a function on a remote server as if it were a local function.
+
+In this application:
+
+Client sends two strings to the server.
+Server concatenates the strings.
+Result is returned to the client.
+Architecture Diagram
++-----------+       Request        +-----------+
+|  Client   | -------------------> |  Server   |
+|           |                      |           |
+|           | <------------------- |           |
++-----------+  Concatenated String +-----------+
+Algorithm
+Client Side
+Start
+Enter two strings
+Send strings to server
+Receive concatenated string
+Display result
+Stop
+Server Side
+Start server
+Wait for client request
+Receive two strings
+Concatenate strings
+Return result to client
+Repeat
+Python RPC Program using XML-RPC
+1. Server Program
+server.py
+from xmlrpc.server import SimpleXMLRPCServer
+
+# Function for concatenation
+def concatenate(s1, s2):
+    return s1 + s2
+
+# Create server
+server = SimpleXMLRPCServer(("127.0.0.1", 8000))
+
+print("Server is running on port 8000...")
+
+# Register function
+server.register_function(concatenate, "concatenate")
+
+# Start server
+server.serve_forever()
+2. Client Program
+client.py
+import xmlrpc.client
+
+# Connect to server
+proxy = xmlrpc.client.ServerProxy(
+    "http://127.0.0.1:8000/"
+)
+
+# Input from user
+str1 = input("Enter first string: ")
+str2 = input("Enter second string: ")
+
+# Remote call
+result = proxy.concatenate(str1, str2)
+
+# Display result
+print("Concatenated String =", result)
+Steps to Execute
+Step 1: Run Server
+python server.py
+
+Output:
+
+Server is running on port 8000...
+Step 2: Run Client
+
+Open another terminal and run:
+
+python client.py
+Sample Output
+Enter first string: Hello
+Enter second string: World
+
+Concatenated String = HelloWorld
+Advantages
+Easy remote communication
+Simplifies distributed computing
+Client can invoke server methods remotely
+Less complex than socket programming
+Conclusion
+
+Thus, the distributed RPC application for string concatenation was successfully implemented using Python XML-RPC. The client remotely sends two strings to the server, and the server returns the concatenated string.
