@@ -300,6 +300,96 @@ Evolutionary search
 to obtain the best solution.
 
 
+
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+import random
+# ◆ Number of cities
+num_cities = 5
+# ◆ Generate random city coordinates
+cities = np.random.rand(num_cities, 2)
+# ◆ Distance matrix
+def distance(a, b):
+  return np.linalg.norm(a - b)
+dist_matrix = np.zeros((num_cities, num_cities))
+  for i in range(num_cities):
+    for j in range(num_cities):
+      dist_matrix[i][j] = distance(cities[i], cities[j])
+# ◆ ACO parameters
+  num_ants = 10
+  num_iterations = 50
+  alpha = 1 # pheromone importance
+  beta = 2 # distance importance
+  evaporation = 0.5
+# ◆ Initialize pheromone
+  pheromone = np.ones((num_cities, num_cities))
+# ◆ Function to choose next city
+  def choose_next_city(current, visited):
+    probs = []
+    for j in range(num_cities):
+      if j not in visited:
+       tau = pheromone[current][j] ** alpha
+  eta = (1.0 / dist_matrix[current][j]) ** beta
+  probs.append((j, tau * eta))
+  total = sum(p for _, p in probs)
+  probs = [(j, p / total) for j, p in probs]
+  r = random.random()
+  cumulative = 0
+  for j, p in probs:
+      cumulative += p
+      if r <= cumulative:
+        return j
+# ◆ Main ACO loop
+  best_path = None
+  best_length = float('inf')
+  for iteration in range(num_iterations):
+   all_paths = []
+  all_lengths = []
+for ant in range(num_ants):
+   path = [random.randint(0, num_cities - 1)]
+while len(path) < num_cities:
+   next_city = choose_next_city(path[-1], path)
+path.append(next_city)
+path.append(path[0]) # return to start
+length = sum(dist_matrix[path[i]][path[i+1]] for i in range(len(path)-1))
+all_paths.append(path)
+all_lengths.append(length)
+if length < best_length:
+   best_length = length
+best_path = path
+# ◆ Evaporation
+pheromone *= (1 - evaporation)
+# ◆ Update pheromone
+for path, length in zip(all_paths, all_lengths):
+   for i in range(len(path)-1):
+    pheromone[path[i]][path[i+1]] += 1.0 / length
+print(f"Iteration {iteration+1}: Best Length = {best_length:.4f}")
+# ◆ Plot best path
+x = cities[:, 0]
+y = cities[:, 1]
+plt.scatter(x, y, color='red')
+for i in range(len(best_path)-1):
+   c1 = cities[best_path[i]]
+c2 = cities[best_path[i+1]]
+plt.plot([c1[0], c2[0]], [c1[1], c2[1]])
+plt.title("ACO - Best Path")
+plt.show()
+print("\nBest Path:", best_path)
+print("Shortest Distance:", best_length)
+
+
+
+
+
+
+
+
+
+
+
+
 code: 
 
 import java.rmi.*;
