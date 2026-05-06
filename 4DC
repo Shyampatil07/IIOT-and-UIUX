@@ -1,0 +1,113 @@
+Fuzzy Set Operations and Fuzzy Relations using Python
+Theory (Exam Writing)
+What is Fuzzy Set?
+
+A Fuzzy Set is a set where each element has a degree of membership between 0 and 1.
+
+Example:
+
+A = {(x1,0.2), (x2,0.7), (x3,1.0)}
+
+Here:
+
+0 → not a member
+1 → full member
+values between 0 and 1 → partial membership
+Basic Operations on Fuzzy Sets
+
+Assume two fuzzy sets:
+
+A = {x1/0.2, x2/0.5, x3/0.7}
+B = {x1/0.3, x2/0.6, x3/0.4}
+1. Union
+
+Formula:
+
+μ(A ∪ B) = max(μA(x), μB(x))
+
+Take maximum membership value.
+
+2. Intersection
+
+Formula:
+
+μ(A ∩ B) = min(μA(x), μB(x))
+
+Take minimum membership value.
+
+3. Complement
+
+Formula:
+
+μ(A') = 1 − μA(x)
+4. Difference
+
+Formula:
+
+A − B = min(μA(x), 1 − μB(x))
+Fuzzy Relation
+
+A fuzzy relation is created using Cartesian Product of two fuzzy sets.
+
+Formula:
+
+R(x,y) = min(A(x), B(y))
+Max-Min Composition
+
+Used to combine two fuzzy relations.
+
+Formula:
+
+T(x,z) = max(min(R(x,y), S(y,z)))
+
+Advantages of Fuzzy Sets
+Handles uncertainty
+Useful in AI systems
+Supports approximate reasoning
+Used in decision making
+Applications
+Washing machines
+Air conditioners
+Medical diagnosis
+Expert systems
+Traffic control systems
+Conclusion
+
+Thus, fuzzy set operations like:
+
+Union
+Intersection
+Complement
+Difference
+
+along with:
+
+Cartesian product
+Max-Min composition
+
+were successfully implemented using Python.
+
+
+
+
+
+code -
+
+  A = {'x1':0.2, 'x2':0.5, 'x3':0.7}
+B = {'x1':0.3, 'x2':0.6, 'x3':0.4}
+# Union
+union = {k: max(A[k], B[k]) for k in A}
+# Intersection
+intersection = {k: min(A[k], B[k]) for k in A}
+# Complement
+comp_A = {k: 1 - A[k] for k in A}
+# Difference A - B
+diff = {k: min(A[k], 1 - B[k]) for k in A}
+print("Union:", union)
+print("Intersection:", intersection)
+print("Complement:", comp_A)
+print("Difference:", diff)
+# Cartesian product
+relation = {(a, b): min(A[a], B[b]) for a in A for b in B}
+print("Relation:", relation)
+
