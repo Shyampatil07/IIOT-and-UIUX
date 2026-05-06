@@ -1,0 +1,321 @@
+Distributed Hotel Booking Application using Python RPC
+Theory (Exam Writing)
+Introduction
+
+A distributed system consists of multiple computers communicating over a network.
+
+In a Distributed Hotel Booking System:
+
+Client machines send requests
+Server manages hotel room booking information
+
+The communication is performed using:
+
+RPC (Remote Procedure Call)
+What is RPC?
+
+RPC allows a client to call functions on a remote server as if they were local functions.
+
+In this application:
+
+Client requests room booking/cancellation
+Server processes request
+Result is returned to client
+Problem Statement
+
+Design and develop a distributed Hotel Booking System where a customer can:
+
+Book room for a guest
+Cancel booking of a guest
+
+The server maintains booking records.
+
+System Architecture
++------------+        RPC Request        +------------+
+|   Client   | -----------------------> |   Server   |
+|            |                          |            |
+| Book Room  | <----------------------- | Booking DB |
+| Cancel     |                          |            |
++------------+       RPC Response       +------------+
+Working of System
+Room Booking
+Client enters guest name
+Request sent to server
+Server books room
+Confirmation returned
+Cancel Booking
+Client enters guest name
+Server checks booking
+Booking cancelled
+Confirmation returned
+Advantages
+Centralized management
+Remote access
+Efficient booking management
+Distributed computing support
+Python Program using XML-RPC
+1. Server Program
+server.py
+from xmlrpc.server import SimpleXMLRPCServer
+
+# -----------------------------------
+# Booking Database
+# -----------------------------------
+
+bookings = {}
+
+room_number = 101
+
+# -----------------------------------
+# Book Room Function
+# -----------------------------------
+
+def book_room(guest_name):
+
+    global room_number
+
+    if guest_name in bookings:
+
+        return (
+            "Guest already has booking."
+        )
+
+    bookings[guest_name] = room_number
+
+    message = (
+        f"Room booked successfully\n"
+        f"Guest Name : {guest_name}\n"
+        f"Room Number : {room_number}"
+    )
+
+    room_number += 1
+
+    return message
+
+# -----------------------------------
+# Cancel Booking Function
+# -----------------------------------
+
+def cancel_booking(guest_name):
+
+    if guest_name in bookings:
+
+        del bookings[guest_name]
+
+        return (
+            f"Booking cancelled for "
+            f"{guest_name}"
+        )
+
+    return "Guest booking not found."
+
+# -----------------------------------
+# Create Server
+# -----------------------------------
+
+server = SimpleXMLRPCServer(
+    ("127.0.0.1", 8000)
+)
+
+print(
+    "Hotel Booking Server Running..."
+)
+
+# Register functions
+server.register_function(
+    book_room,
+    "book_room"
+)
+
+server.register_function(
+    cancel_booking,
+    "cancel_booking"
+)
+
+# Start server
+server.serve_forever()
+2. Client Program
+client.py
+import xmlrpc.client
+
+# Connect to server
+proxy = xmlrpc.client.ServerProxy(
+    "http://127.0.0.1:8000/"
+)
+
+while True:
+
+    print("\n1. Book Room")
+
+    print("2. Cancel Booking")
+
+    print("3. Exit")
+
+    choice = int(input(
+        "Enter Choice : "
+    ))
+
+    # -----------------------------
+    # Book Room
+    # -----------------------------
+
+    if choice == 1:
+
+        guest = input(
+            "Enter Guest Name : "
+        )
+
+        result = proxy.book_room(guest)
+
+        print("\n", result)
+
+    # -----------------------------
+    # Cancel Booking
+    # -----------------------------
+
+    elif choice == 2:
+
+        guest = input(
+            "Enter Guest Name : "
+        )
+
+        result = proxy.cancel_booking(
+            guest
+        )
+
+        print("\n", result)
+
+    # -----------------------------
+    # Exit
+    # -----------------------------
+
+    elif choice == 3:
+
+        print("Exiting...")
+
+        break
+
+    else:
+
+        print("Invalid Choice")
+Steps to Execute
+Step 1: Run Server
+
+Open first terminal:
+
+python server.py
+
+Output:
+
+Hotel Booking Server Running...
+Step 2: Run Client
+
+Open second terminal:
+
+python client.py
+Sample Output
+Booking Room
+1. Book Room
+2. Cancel Booking
+3. Exit
+
+Enter Choice : 1
+
+Enter Guest Name : Shyam
+
+Room booked successfully
+Guest Name : Shyam
+Room Number : 101
+Cancel Booking
+Enter Choice : 2
+
+Enter Guest Name : Shyam
+
+Booking cancelled for Shyam
+Applications
+Hotel management systems
+Online reservation systems
+Distributed databases
+Cloud-based services
+Conclusion
+
+Thus, the distributed Hotel Booking Application was successfully implemented using Python XML-RPC. The client can remotely:
+
+Book hotel rooms
+Cancel room bookings
+
+through communication with the hotel server.
+
+
+code-
+
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.rmi.server.*;
+import java.util.*;
+// ◆ Remote Interface
+interface HotelService extends Remote {
+String bookRoom(String guestName) throws RemoteException;
+String cancelBooking(String guestName) throws RemoteException;
+}
+// ◆ Implementation
+class HotelServiceImpl extends UnicastRemoteObject implements HotelService {
+private HashMap<String, String> bookings;
+protected HotelServiceImpl() throws RemoteException {
+bookings = new HashMap<>();
+}
+public synchronized String bookRoom(String guestName) throws RemoteException {
+if (bookings.containsKey(guestName)) {
+return "Room already booked for " + guestName;
+}
+bookings.put(guestName, "Booked");
+return "Room successfully booked for " + guestName;
+}
+public synchronized String cancelBooking(String guestName) throws RemoteException {
+if (!bookings.containsKey(guestName)) {
+return "No booking found for " + guestName;
+}
+bookings.remove(guestName);
+return "Booking cancelled for " + guestName;
+}
+}
+// ◆ Main Class (Server + Client)
+public class HotelSystem {
+public static void main(String[] args) {
+try {
+// Start RMI registry inside code
+LocateRegistry.createRegistry(1099);
+// Create object
+HotelServiceImpl obj = new HotelServiceImpl();
+// Bind service
+Naming.rebind("rmi://localhost/HotelService", obj);
+System.out.println("⬛Server is running...");
+// ◆ Client Part
+HotelService stub = (HotelService) Naming.lookup("rmi://localhost/HotelService");
+Scanner sc = new Scanner(System.in);
+while (true) {
+System.out.println("\n1. Book Room");
+System.out.println("2. Cancel Booking");
+System.out.println("3. Exit");
+System.out.print("Enter choice: ");
+int choice = sc.nextInt();
+sc.nextLine();
+if (choice == 1) {
+System.out.print("Enter guest name: ");
+String name = sc.nextLine();
+System.out.println(stub.bookRoom(name));
+}
+else if (choice == 2) {
+System.out.print("Enter guest name: ");
+String name = sc.nextLine();
+System.out.println(stub.cancelBooking(name));
+}
+else {
+break;
+}
+}
+} catch (Exception e) {
+e.printStackTrace();
+}
+}
+}
