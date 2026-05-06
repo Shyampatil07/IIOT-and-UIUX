@@ -1,0 +1,374 @@
+Implementation of DEAP (Distributed Evolutionary Algorithms) using Python
+Theory (Exam Writing)
+Introduction
+
+DEAP stands for:
+
+Distributed Evolutionary Algorithms in Python
+
+It is a Python framework used for:
+
+Genetic Algorithms
+Evolutionary Algorithms
+Optimization problems
+Artificial Intelligence research
+
+DEAP provides tools to implement:
+
+Selection
+Crossover
+Mutation
+Fitness evaluation
+Evolutionary Algorithm
+
+An evolutionary algorithm is inspired by:
+
+Natural evolution
+Survival of the fittest
+Genetic inheritance
+
+It evolves solutions over generations to obtain the best result.
+
+Basic Components of DEAP
+Component	Description
+Population	Set of candidate solutions
+Individual	Single solution
+Fitness Function	Evaluates quality
+Selection	Chooses best individuals
+Crossover	Combines parents
+Mutation	Random modification
+Generation	One iteration
+Working of DEAP Algorithm
+Step 1
+
+Generate initial population randomly.
+
+Step 2
+
+Calculate fitness of individuals.
+
+Step 3
+
+Select best individuals.
+
+Step 4
+
+Apply crossover and mutation.
+
+Step 5
+
+Generate new population.
+
+Step 6
+
+Repeat until optimal solution is obtained.
+
+Applications
+Optimization problems
+Machine learning
+Robotics
+Scheduling
+Data mining
+AI systems
+Advantages
+Easy to use
+Flexible
+Fast implementation
+Supports parallel processing
+Powerful optimization tool
+Install DEAP
+pip install deap
+Python Program using DEAP
+Objective:
+
+Maximize:
+
+f(x)=x
+2
+Code
+import random
+
+from deap import base
+from deap import creator
+from deap import tools
+from deap import algorithms
+
+# ---------------------------------
+# Create Fitness Function
+# ---------------------------------
+
+creator.create(
+    "FitnessMax",
+    base.Fitness,
+    weights=(1.0,)
+)
+
+# ---------------------------------
+# Create Individual
+# ---------------------------------
+
+creator.create(
+    "Individual",
+    list,
+    fitness=creator.FitnessMax
+)
+
+toolbox = base.Toolbox()
+
+# ---------------------------------
+# Attribute Generator
+# ---------------------------------
+
+toolbox.register(
+    "attr_int",
+    random.randint,
+    0,
+    10
+)
+
+# ---------------------------------
+# Structure Initializers
+# ---------------------------------
+
+toolbox.register(
+    "individual",
+    tools.initRepeat,
+    creator.Individual,
+    toolbox.attr_int,
+    n=5
+)
+
+toolbox.register(
+    "population",
+    tools.initRepeat,
+    list,
+    toolbox.individual
+)
+
+# ---------------------------------
+# Fitness Function
+# ---------------------------------
+
+def evalFunction(individual):
+
+    x = individual[0]
+
+    return (x * x,)
+
+toolbox.register(
+    "evaluate",
+    evalFunction
+)
+
+# ---------------------------------
+# Genetic Operators
+# ---------------------------------
+
+toolbox.register(
+    "mate",
+    tools.cxTwoPoint
+)
+
+toolbox.register(
+    "mutate",
+    tools.mutFlipBit,
+    indpb=0.1
+)
+
+toolbox.register(
+    "select",
+    tools.selTournament,
+    tournsize=3
+)
+
+# ---------------------------------
+# Main Program
+# ---------------------------------
+
+population = toolbox.population(n=6)
+
+NGEN = 5
+
+for gen in range(NGEN):
+
+    print(f"\nGeneration {gen + 1}")
+
+    # Evaluate fitness
+    fitnesses = list(
+        map(toolbox.evaluate, population)
+    )
+
+    for ind, fit in zip(population, fitnesses):
+
+        ind.fitness.values = fit
+
+    # Print individuals
+    for ind in population:
+
+        print(
+            f"Individual: {ind} "
+            f"Fitness: {ind.fitness.values}"
+        )
+
+    # Selection
+    offspring = toolbox.select(
+        population,
+        len(population)
+    )
+
+    offspring = list(map(toolbox.clone, offspring))
+
+    # Crossover
+    for child1, child2 in zip(
+        offspring[::2],
+        offspring[1::2]
+    ):
+
+        if random.random() < 0.7:
+
+            toolbox.mate(child1, child2)
+
+            del child1.fitness.values
+            del child2.fitness.values
+
+    # Mutation
+    for mutant in offspring:
+
+        if random.random() < 0.2:
+
+            toolbox.mutate(mutant)
+
+            del mutant.fitness.values
+
+    population[:] = offspring
+
+# ---------------------------------
+# Best Solution
+# ---------------------------------
+
+best = tools.selBest(population, 1)[0]
+
+print("\nBest Individual:", best)
+
+print(
+    "Best Fitness:",
+    evalFunction(best)
+)
+Sample Output
+Generation 1
+Individual: [2] Fitness: (4,)
+Individual: [5] Fitness: (25,)
+Individual: [8] Fitness: (64,)
+
+Generation 2
+...
+
+Best Individual: [10]
+Best Fitness: (100,)
+Explanation
+Fitness Function
+f(x)=x
+2
+
+Goal is to maximize fitness.
+
+Selection
+
+Tournament selection chooses best individuals.
+
+Crossover
+
+Parents exchange genes.
+
+Mutation
+
+Random changes improve diversity.
+
+Evolution
+
+Population improves generation by generation.
+
+Conclusion
+
+Thus, DEAP (Distributed Evolutionary Algorithms in Python) was successfully implemented using Python. The evolutionary algorithm optimizes the fitness function using:
+
+Selection
+Crossover
+Mutation
+Evolutionary search
+
+to obtain the best solution.
+
+
+code: 
+
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.rmi.server.*;
+import java.util.*;
+// ◆ Remote Interface
+interface HotelService extends Remote {
+String bookRoom(String guestName) throws RemoteException;
+String cancelBooking(String guestName) throws RemoteException;
+}
+// ◆ Implementation
+class HotelServiceImpl extends UnicastRemoteObject implements HotelService {
+private HashMap<String, String> bookings;
+protected HotelServiceImpl() throws RemoteException {
+bookings = new HashMap<>();
+}
+public synchronized String bookRoom(String guestName) throws RemoteException {
+if (bookings.containsKey(guestName)) {
+return "Room already booked for " + guestName;
+}
+bookings.put(guestName, "Booked");
+return "Room successfully booked for " + guestName;
+}
+public synchronized String cancelBooking(String guestName) throws RemoteException {
+if (!bookings.containsKey(guestName)) {
+return "No booking found for " + guestName;
+}
+bookings.remove(guestName);
+return "Booking cancelled for " + guestName;
+}
+}
+// ◆ Main Class (Server + Client)
+public class HotelSystem {
+public static void main(String[] args) {
+try {
+// Start RMI registry inside code
+LocateRegistry.createRegistry(1099);
+// Create object
+HotelServiceImpl obj = new HotelServiceImpl();
+// Bind service
+Naming.rebind("rmi://localhost/HotelService", obj);
+System.out.println("⬛Server is running...");
+// ◆ Client Part
+HotelService stub = (HotelService) Naming.lookup("rmi://localhost/HotelService");
+Scanner sc = new Scanner(System.in);
+while (true) {
+System.out.println("\n1. Book Room");
+System.out.println("2. Cancel Booking");
+System.out.println("3. Exit");
+System.out.print("Enter choice: ");
+int choice = sc.nextInt();
+sc.nextLine();
+if (choice == 1) {
+System.out.print("Enter guest name: ");
+String name = sc.nextLine();
+System.out.println(stub.bookRoom(name));
+}
+else if (choice == 2) {
+System.out.print("Enter guest name: ");
+String name = sc.nextLine();
+System.out.println(stub.cancelBooking(name));
+}
+else {
+break;
+}
+}
+} catch (Exception e) {
+e.printStackTrace();
+}
+}
+}
