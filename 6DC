@@ -1,0 +1,171 @@
+Optimization of Genetic Algorithm Parameter in Hybrid Genetic Algorithm–Neural Network Modelling: Application to Spray Drying of Coconut Milk
+Theory (Exam Writing)
+Introduction
+
+Artificial Intelligence techniques such as:
+
+Genetic Algorithm (GA)
+Artificial Neural Network (ANN)
+
+are widely used in optimization and prediction problems.
+
+A Hybrid GA–ANN model combines:
+
+Optimization capability of GA
+Learning capability of ANN
+
+This hybrid approach improves prediction accuracy and process optimization.
+
+Spray Drying of Coconut Milk
+What is Spray Drying?
+
+Spray drying is a process used to convert liquid coconut milk into powder form by:
+
+Atomizing liquid into small droplets
+Passing hot air
+Evaporating moisture rapidly
+Need for Optimization
+
+The spray drying process depends on parameters such as:
+
+Inlet air temperature
+Feed flow rate
+Air velocity
+Concentration of coconut milk
+
+Improper parameters may lead to:
+
+Low powder yield
+Poor quality
+High moisture content
+
+Hence optimization is required.
+
+Genetic Algorithm (GA)
+Definition
+
+A Genetic Algorithm is an optimization technique inspired by natural selection and genetics.
+
+It works using:
+
+Population
+Selection
+Crossover
+Mutation
+Steps in Genetic Algorithm
+1. Initialization
+
+Generate random population of solutions.
+
+2. Fitness Evaluation
+
+Evaluate quality of each solution.
+
+3. Selection
+
+Select best individuals.
+
+4. Crossover
+
+Combine parent solutions.
+
+5. Mutation
+
+Randomly modify genes.
+
+6. Termination
+
+Repeat until optimal solution is obtained.
+
+Artificial Neural Network (ANN)
+Definition
+
+ANN is a computational model inspired by the human brain.
+
+It consists of:
+
+Input layer
+Hidden layer
+Output layer
+
+ANN learns patterns from data and predicts outputs.
+
+Hybrid GA–ANN Model
+Working
+Step 1
+
+ANN is trained using experimental data from spray drying.
+
+Step 2
+
+GA optimizes ANN parameters such as:
+
+Number of neurons
+Learning rate
+Weights
+Bias values
+Step 3
+
+Optimized ANN predicts:
+
+Powder yield
+Moisture content
+Drying efficiency
+
+with better accuracy.
+
+Parameters Optimized by GA
+
+Important GA parameters include:
+
+Parameter	Description
+Population Size	Number of candidate solutions
+Crossover Rate	Probability of crossover
+Mutation Rate	Probability of mutation
+Number of Generations	Iteration count
+Selection Method	Technique for choosing parents
+Advantages of Hybrid GA–ANN Model
+Higher prediction accuracy
+Better optimization
+Reduces experimental cost
+Handles nonlinear systems
+Faster convergence
+Applications
+Food processing industry
+Spray drying systems
+Milk powder production
+Process optimization
+Industrial automation
+
+Conclusion
+
+Thus, optimization of Genetic Algorithm parameters in a Hybrid GA–ANN model helps improve prediction and optimization in spray drying of coconut milk. The hybrid model combines the strengths of both GA and ANN to achieve efficient and accurate process modelling.
+
+
+code-
+import random
+def fitness(x):
+  return x**2
+# ◆ Step 1: Initialization
+population = [random.randint(1, 10) for _ in range(5)]
+for generation in range(5):
+  print(f"\nGeneration {generation+1}:", population)
+# ◆ Step 2: Fitness Evaluation
+population = sorted(population, key=fitness, reverse=True)
+# ◆ Step 3: Selection (best individuals)
+best = population[:2]
+# ◆ Step 4: Cloning
+clones = []
+for b in best:
+  for _ in range(3):
+# ◆ Step 5: Mutation
+   mutated = b + random.randint(-1, 1)
+clones.append(mutated)
+# ◆ Step 6: Selection from combined population
+combined = population + clones
+population = sorted(combined, key=fitness, reverse=True)[:5]
+# Final best
+best_solution = max(population, key=fitness)
+print("\nBest solution:", best_solution)
+
+
