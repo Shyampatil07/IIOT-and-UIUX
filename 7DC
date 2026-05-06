@@ -1,0 +1,318 @@
+Implementation of Clonal Selection Algorithm using Python
+Theory (Exam Writing)
+What is Clonal Selection Algorithm?
+
+The Clonal Selection Algorithm (CSA) is an Artificial Immune System (AIS) algorithm inspired by the biological immune system.
+
+It is based on the principle that:
+
+Antibodies recognizing antigens are selected
+Best antibodies are cloned
+Clones undergo mutation
+Improved antibodies are produced
+
+CSA is mainly used for:
+
+Optimization
+Pattern recognition
+Machine learning
+Data classification
+Biological Inspiration
+
+In the human immune system:
+
+Antigens enter the body
+Antibodies detect antigens
+Best antibodies multiply (clone)
+Mutation improves diversity
+Strong antibodies survive
+
+The same concept is used computationally.
+
+Steps of Clonal Selection Algorithm
+1. Initialize Population
+
+Generate random antibodies.
+
+2. Calculate Affinity
+
+Evaluate fitness of each antibody.
+
+3. Select Best Antibodies
+
+Choose high-affinity antibodies.
+
+4. Clone Selected Antibodies
+
+Create copies proportional to fitness.
+
+5. Mutation
+
+Apply mutation to clones.
+
+6. Replace Weak Antibodies
+
+Low-fitness antibodies are removed.
+
+7. Repeat
+
+Continue until optimal solution is found.
+
+Applications
+Optimization problems
+Intrusion detection
+Data mining
+Pattern recognition
+Robotics
+Machine learning
+Advantages
+Good optimization capability
+Adaptive learning
+Maintains diversity
+Avoids local minima
+
+
+Python Program;
+import random
+
+# -----------------------------
+# Generate Initial Population
+# -----------------------------
+
+population_size = 5
+
+population = [
+    random.randint(0, 20)
+    for i in range(population_size)
+]
+
+print("Initial Population:")
+print(population)
+
+# -----------------------------
+# Fitness Function
+# Goal: maximize value
+# -----------------------------
+
+def fitness(x):
+    return x * x
+
+# -----------------------------
+# Clonal Selection Process
+# -----------------------------
+
+generations = 5
+
+for generation in range(generations):
+
+    print(f"\nGeneration {generation + 1}")
+
+    # ---------------------------------
+    # Calculate fitness
+    # ---------------------------------
+
+    fitness_values = []
+
+    for antibody in population:
+
+        fit = fitness(antibody)
+
+        fitness_values.append((antibody, fit))
+
+    # ---------------------------------
+    # Sort based on fitness
+    # ---------------------------------
+
+    fitness_values.sort(
+        key=lambda x: x[1],
+        reverse=True
+    )
+
+    print("\nFitness Values:")
+    print(fitness_values)
+
+    # ---------------------------------
+    # Select best antibodies
+    # ---------------------------------
+
+    selected = fitness_values[:2]
+
+    print("\nSelected Antibodies:")
+    print(selected)
+
+    # ---------------------------------
+    # Clone antibodies
+    # ---------------------------------
+
+    clones = []
+
+    for antibody, fit in selected:
+
+        for i in range(3):
+
+            clones.append(antibody)
+
+    print("\nClones:")
+    print(clones)
+
+    # ---------------------------------
+    # Mutation
+    # ---------------------------------
+
+    mutated_clones = []
+
+    for clone in clones:
+
+        mutation = random.randint(-2, 2)
+
+        mutated_value = clone + mutation
+
+        # Keep value positive
+        mutated_value = max(0, mutated_value)
+
+        mutated_clones.append(mutated_value)
+
+    print("\nMutated Clones:")
+    print(mutated_clones)
+
+    # ---------------------------------
+    # Create new population
+    # ---------------------------------
+
+    population = mutated_clones[:population_size]
+
+    print("\nNew Population:")
+    print(population)
+
+# -----------------------------
+# Final Best Solution
+# -----------------------------
+
+best_solution = max(
+    population,
+    key=fitness
+)
+
+print("\nBest Solution:", best_solution)
+
+print("Best Fitness:", fitness(best_solution))
+Sample Output
+Initial Population:
+[5, 12, 7, 19, 3]
+
+Generation 1
+
+Fitness Values:
+[(19, 361), (12, 144), (7, 49), (5, 25), (3, 9)]
+
+Selected Antibodies:
+[(19, 361), (12, 144)]
+
+Clones:
+[19, 19, 19, 12, 12, 12]
+
+Mutated Clones:
+[20, 18, 19, 13, 11, 12]
+
+New Population:
+[20, 18, 19, 13, 11]
+
+Best Solution: 20
+Best Fitness: 400
+Working Explanation
+Population
+
+Represents antibodies.
+
+Fitness Function
+f(x)=x
+2
+
+Higher fitness means better antibody.
+
+Cloning
+
+Best antibodies are copied multiple times.
+
+Mutation
+
+Small random changes improve diversity.
+
+Selection
+
+Best antibodies survive to next generation.
+
+Conclusion
+
+Thus, the Clonal Selection Algorithm was successfully implemented using Python. The algorithm mimics the biological immune system and performs optimization through:
+
+Selection
+Cloning
+Mutation
+Replacement
+
+to obtain the best solution.
+
+
+import random
+import math
+# ◆ Sample dataset (features: vibration, crack_length)
+# label: 0 = Undamaged, 1 = Damaged
+data = [
+([0.1, 0.2], 0),
+([0.2, 0.1], 0),
+([0.8, 0.9], 1),
+([0.7, 0.8], 1),
+([0.15, 0.25], 0),
+([0.85, 0.95], 1)
+]
+# ◆ Distance function (Euclidean)
+def distance(a, b):
+return math.sqrt(sum((x - y) ** 2 for x, y in zip(a, b)))
+# ◆ Step 1: Initialize antibodies (memory cells)
+antibodies = []
+for _ in range(4):
+features, label = random.choice(data)
+antibodies.append((features, label))
+# ◆ Training (Clonal Selection inspired)
+for iteration in range(5):
+new_antibodies = []
+for ab_features, ab_label in antibodies:
+# clone and mutate
+for _ in range(2):
+mutated = [x + random.uniform(-0.1, 0.1) for x in ab_features]
+new_antibodies.append((mutated, ab_label))
+# combine old + new
+antibodies.extend(new_antibodies)
+# select best antibodies (closest to training data)
+antibodies = sorted(
+antibodies,
+key=lambda ab: sum(distance(ab[0], d[0]) for d in data)
+)[:6]
+# ◆ Classification function
+def classify(sample):
+nearest = min(antibodies, key=lambda ab: distance(sample, ab[0]))
+return nearest[1]
+# ◆ Testing + Evaluation
+TP = TN = FP = FN = 0
+print("\n--- Classification Results ---")
+for features, actual in data:
+pred = classify(features)
+print(f"Input: {features} -> Predicted: {pred}, Actual: {actual}")
+if pred == 1 and actual == 1:
+TP += 1
+elif pred == 0 and actual == 0:
+TN += 1
+elif pred == 1 and actual == 0:
+FP += 1
+elif pred == 0 and actual == 1:
+FN += 1
+# ◆ Metrics
+accuracy = (TP + TN) / len(data)
+sensitivity = TP / (TP + FN) if (TP + FN) != 0 else 0
+specificity = TN / (TN + FP) if (TN + FP) != 0 else 0
+print("\n--- Performance ---")
+print("Accuracy:", round(accuracy, 2))
+print("Sensitivity:", round(sensitivity, 2))
+print("Specificity:", round(specificity, 2))
+
