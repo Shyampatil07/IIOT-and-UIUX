@@ -1,0 +1,396 @@
+Big Data Platforms: Setup, Configuration, Theory & Code
+1. Hadoop using Cloudera
+What is Hadoop?
+
+Apache Hadoop is an open-source framework used for:
+
+Distributed storage using HDFS
+Distributed processing using MapReduce
+Large-scale data analytics
+Hadoop Ecosystem
+6
+
+Components:
+
+HDFS → Storage
+YARN → Resource management
+MapReduce → Processing
+Hive → SQL on Hadoop
+HBase → NoSQL database
+Spark → Fast processing engine
+Cloudera Setup & Configuration
+What is Cloudera?
+
+Cloudera
+ provides enterprise Hadoop distribution.
+
+Installation Steps (Single Node)
+Step 1: Install Java
+sudo apt update
+sudo apt install openjdk-8-jdk -y
+
+Check Java:
+
+java -version
+Step 2: Create Hadoop User
+sudo adduser hadoop
+Step 3: Download Hadoop
+wget https://downloads.apache.org/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
+tar -xvzf hadoop-3.3.6.tar.gz
+sudo mv hadoop-3.3.6 /usr/local/hadoop
+Step 4: Configure Environment Variables
+
+Edit .bashrc
+
+export HADOOP_HOME=/usr/local/hadoop
+export PATH=$PATH:$HADOOP_HOME/bin
+export PATH=$PATH:$HADOOP_HOME/sbin
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+
+Apply changes:
+
+source ~/.bashrc
+Step 5: Configure Hadoop Files
+core-site.xml
+<configuration>
+   <property>
+      <name>fs.defaultFS</name>
+      <value>hdfs://localhost:9000</value>
+   </property>
+</configuration>
+hdfs-site.xml
+<configuration>
+   <property>
+      <name>dfs.replication</name>
+      <value>1</value>
+   </property>
+</configuration>
+Step 6: Format NameNode
+hdfs namenode -format
+Step 7: Start Hadoop
+start-dfs.sh
+start-yarn.sh
+
+Check:
+
+jps
+
+Expected services:
+
+NameNode
+DataNode
+ResourceManager
+NodeManager
+Hadoop Example Program (Word Count)
+Mapper.java
+import java.io.IOException;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapreduce.Mapper;
+
+public class MapperClass extends Mapper<Object, Text, Text, IntWritable> {
+
+    private final static IntWritable one = new IntWritable(1);
+    private Text word = new Text();
+
+    public void map(Object key, Text value, Context context)
+            throws IOException, InterruptedException {
+
+        String[] words = value.toString().split(" ");
+
+        for(String w : words) {
+            word.set(w);
+            context.write(word, one);
+        }
+    }
+}
+Reducer.java
+import java.io.IOException;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapreduce.Reducer;
+
+public class ReducerClass extends Reducer<Text, IntWritable,
+        Text, IntWritable> {
+
+    public void reduce(Text key, Iterable<IntWritable> values,
+                       Context context)
+            throws IOException, InterruptedException {
+
+        int sum = 0;
+
+        for(IntWritable val : values) {
+            sum += val.get();
+        }
+
+        context.write(key, new IntWritable(sum));
+    }
+}
+Driver.java
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+public class DriverClass {
+
+    public static void main(String[] args) throws Exception {
+
+        Configuration conf = new Configuration();
+
+        Job job = Job.getInstance(conf, "word count");
+
+        job.setJarByClass(DriverClass.class);
+
+        job.setMapperClass(MapperClass.class);
+        job.setReducerClass(ReducerClass.class);
+
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
+
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
+}
+Run Hadoop Program
+
+Compile:
+
+javac -classpath `hadoop classpath` *.java
+jar cf wc.jar *.class
+
+Run:
+
+hadoop jar wc.jar DriverClass input output
+2. Google Cloud BigQuery
+What is BigQuery?
+
+Google BigQuery is a serverless cloud data warehouse by Google Cloud
+.
+
+Features:
+
+SQL analytics
+Petabyte-scale processing
+No server management
+Machine learning support
+BigQuery Architecture
+7
+Setup BigQuery
+Step 1: Create Google Cloud Account
+
+Go to:
+
+Google Cloud Console
+
+Step 2: Create Project
+New Project
+Enable Billing
+Enable BigQuery API
+Step 3: Create Dataset
+CREATE SCHEMA company;
+Step 4: Create Table
+CREATE TABLE company.employee (
+   id INT64,
+   name STRING,
+   salary FLOAT64
+);
+Step 5: Insert Data
+INSERT INTO company.employee
+VALUES
+(1, 'Shyam', 45000),
+(2, 'Rahul', 50000);
+BigQuery Query Example
+SELECT *
+FROM company.employee
+WHERE salary > 45000;
+Python Example using BigQuery
+from google.cloud import bigquery
+
+client = bigquery.Client()
+
+query = """
+SELECT name, salary
+FROM company.employee
+"""
+
+results = client.query(query)
+
+for row in results:
+    print(row.name, row.salary)
+3. Databricks Lakehouse Platform
+What is Databricks?
+
+Databricks
+ is a unified analytics platform built on Apache Spark.
+
+Lakehouse Architecture
+
+Combines:
+
+Data Warehouse
+Data Lake
+6
+Databricks Setup
+Step 1: Create Account
+
+Go to:
+
+Databricks Community Edition
+
+Step 2: Create Cluster
+Compute
+Create Cluster
+Select Runtime
+Step 3: Create Notebook
+
+Languages:
+
+Python
+SQL
+Scala
+R
+Databricks PySpark Example
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder.appName("Employee").getOrCreate()
+
+data = [
+    (1, "Shyam", 45000),
+    (2, "Rahul", 50000)
+]
+
+df = spark.createDataFrame(data, ["id", "name", "salary"])
+
+df.show()
+Data Filtering Example
+df.filter(df.salary > 45000).show()
+SQL Example in Databricks
+CREATE TABLE employee (
+   id INT,
+   name STRING,
+   salary DOUBLE
+);
+
+SELECT * FROM employee;
+4. Snowflake
+What is Snowflake?
+
+Snowflake
+ is a cloud-based data warehouse platform.
+
+Features:
+
+Multi-cloud
+Auto scaling
+Separate storage & compute
+High performance analytics
+Snowflake Architecture
+7
+Snowflake Setup
+Step 1: Create Trial Account
+
+Visit:
+
+Snowflake Trial
+
+Step 2: Create Database
+CREATE DATABASE company_db;
+Step 3: Use Database
+USE DATABASE company_db;
+Step 4: Create Table
+CREATE TABLE employee (
+   id INT,
+   name STRING,
+   salary FLOAT
+);
+Step 5: Insert Data
+INSERT INTO employee
+VALUES
+(1, 'Shyam', 40000),
+(2, 'Rahul', 55000);
+Snowflake Query Example
+SELECT * FROM employee;
+Python Connector Example
+import snowflake.connector
+
+conn = snowflake.connector.connect(
+    user='USERNAME',
+    password='PASSWORD',
+    account='ACCOUNT'
+)
+
+cursor = conn.cursor()
+
+cursor.execute("SELECT * FROM employee")
+
+for row in cursor:
+    print(row)
+5. Amazon Redshift
+What is Amazon Redshift?
+
+Amazon Redshift is a fully managed cloud data warehouse by Amazon Web Services
+.
+
+Features:
+
+Columnar storage
+Massive Parallel Processing (MPP)
+Fast SQL analytics
+Integration with S3
+Redshift Architecture
+7
+Redshift Setup
+Step 1: Login AWS Console
+
+Open:
+
+AWS Console
+
+Step 2: Create Redshift Cluster
+Redshift
+Create Cluster
+Select node type
+Configure credentials
+Step 3: Connect using Query Editor
+Create Table
+CREATE TABLE employee (
+   id INT,
+   name VARCHAR(100),
+   salary FLOAT
+);
+Insert Data
+INSERT INTO employee
+VALUES
+(1, 'Shyam', 40000),
+(2, 'Rahul', 60000);
+Query Example
+SELECT * FROM employee;
+Python Example
+import psycopg2
+
+conn = psycopg2.connect(
+    dbname='dev',
+    host='redshift-cluster.amazonaws.com',
+    port='5439',
+    user='awsuser',
+    password='password'
+)
+
+cur = conn.cursor()
+
+cur.execute("SELECT * FROM employee")
+
+rows = cur.fetchall()
+
+for row in rows:
+    print(row)
+Comparison Table
+Platform	Type	Best For	Language
+Hadoop	Distributed Processing	Big Data Storage	Java
+BigQuery	Serverless Warehouse	Fast SQL Analytics	SQL
+Databricks	Lakehouse Platform	AI + Data Engineering	PySpark
+Snowflake	Cloud Data Warehouse	Analytics	SQL
+Redshift	AWS Data Warehouse	Enterprise BI	SQL
