@@ -1,0 +1,83 @@
+MapReduce Program to Calculate Frequency of a Given Word
+Theory (Write in Exam)
+Introduction
+
+MapReduce is a programming model used for processing large amounts of data in a distributed environment. It is mainly used in Hadoop for parallel data processing.
+
+The MapReduce framework works in two phases:
+
+Mapper Phase
+Reads the input data.
+Converts the data into key-value pairs.
+Emits intermediate output.
+Reducer Phase
+Receives grouped key-value pairs from the mapper.
+Performs aggregation or counting operation.
+Produces final output.
+Word Frequency Problem
+
+The objective is to calculate how many times a given word appears in a file.
+
+Working of Program
+The Mapper reads each line from the file.
+It splits the line into words.
+
+If the word matches the target word, it outputs:
+
+word    1
+The Reducer collects all values of the same word.
+It adds all the counts and prints the final frequency.
+Advantages of MapReduce
+Processes large data efficiently.
+Supports parallel execution.
+Fault tolerant.
+Scalable for big data applications.
+Mapper Program (Python)
+#!/usr/bin/env python3
+import sys
+
+# Word to search
+target_word = "hadoop"
+
+for line in sys.stdin:
+    words = line.strip().split()
+
+    for word in words:
+        if word.lower() == target_word.lower():
+            print(f"{word}\t1")
+Reducer Program (Python)
+#!/usr/bin/env python3
+import sys
+
+current_word = None
+current_count = 0
+
+for line in sys.stdin:
+    word, count = line.strip().split('\t')
+    count = int(count)
+
+    if current_word == word:
+        current_count += count
+    else:
+        if current_word:
+            print(f"{current_word}\t{current_count}")
+
+        current_word = word
+        current_count = count
+
+# Print final result
+if current_word:
+    print(f"{current_word}\t{current_count}")
+Input File Example
+Hadoop is big data technology
+Hadoop is used for distributed computing
+Big data uses Hadoop
+Mapper Output
+Hadoop    1
+Hadoop    1
+Hadoop    1
+Reducer Output
+Hadoop    3
+Conclusion
+
+Thus, the MapReduce program successfully calculates the frequency of a given word in a file using Mapper and Reducer phases in Python.
