@@ -1,0 +1,150 @@
+Data Classification using Classification Algorithm
+Theory (Write in Exam)
+Introduction
+
+Data Classification is a process in which data is categorized into different classes based on input features.
+
+Classification is a supervised machine learning technique where:
+
+Input data is trained using labeled datasets.
+The model predicts the class/category of new data.
+
+Examples:
+
+Spam email detection
+Disease prediction
+Student result prediction
+Fraud detection
+Classification Algorithms
+
+Common classification algorithms are:
+
+Algorithm	Use
+Decision Tree	Rule-based classification
+Naive Bayes	Probability-based classification
+K-Nearest Neighbor (KNN)	Distance-based classification
+Logistic Regression	Binary classification
+Support Vector Machine (SVM)	Margin-based classification
+Decision Tree Classification
+
+Decision Tree Learning is a supervised learning algorithm used for classification and prediction.
+
+It works like a tree structure:
+
+Root node → main condition
+Internal node → decision
+Leaf node → final class/output
+Steps in Classification Process
+Collect dataset
+Split dataset into training and testing data
+Train classification model
+Predict output
+Evaluate accuracy
+Advantages
+Easy to understand
+Fast prediction
+Handles large datasets
+Useful for decision making
+Python Program using Decision Tree Classification
+Required Libraries
+pip install pandas scikit-learn matplotlib
+Python Code
+# Data Classification using Decision Tree
+
+import pandas as pd
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn import tree
+import matplotlib.pyplot as plt
+
+# -----------------------------------
+# Sample Dataset
+# -----------------------------------
+
+data = {
+    'Hours_Studied': [1, 2, 3, 4, 5, 6, 7, 8],
+    'Attendance': [50, 60, 65, 70, 75, 80, 85, 90],
+    'Result': ['Fail', 'Fail', 'Fail', 'Pass',
+               'Pass', 'Pass', 'Pass', 'Pass']
+}
+
+df = pd.DataFrame(data)
+
+print("Dataset:")
+print(df)
+
+# -----------------------------------
+# Input and Output
+# -----------------------------------
+
+X = df[['Hours_Studied', 'Attendance']]
+y = df['Result']
+
+# -----------------------------------
+# Split Dataset
+# -----------------------------------
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.25,
+    random_state=42
+)
+
+# -----------------------------------
+# Train Decision Tree Model
+# -----------------------------------
+
+model = DecisionTreeClassifier()
+
+model.fit(X_train, y_train)
+
+# -----------------------------------
+# Prediction
+# -----------------------------------
+
+y_pred = model.predict(X_test)
+
+print("\nPredicted Results:")
+print(y_pred)
+
+# -----------------------------------
+# Accuracy
+# -----------------------------------
+
+accuracy = accuracy_score(y_test, y_pred)
+
+print("\nAccuracy:", accuracy * 100)
+
+# -----------------------------------
+# Visualize Decision Tree
+# -----------------------------------
+
+plt.figure(figsize=(10,6))
+
+tree.plot_tree(
+    model,
+    feature_names=['Hours_Studied', 'Attendance'],
+    class_names=['Fail', 'Pass'],
+    filled=True
+)
+
+plt.show()
+Sample Output
+Dataset Loaded
+
+Predicted Results:
+['Pass' 'Fail']
+
+Accuracy: 100.0
+Explanation of Program
+Step	Description
+Load Dataset	Create student dataset
+Split Data	Divide training and testing data
+Train Model	Build Decision Tree classifier
+Predict	Predict student result
+Accuracy	Measure model performance
+Visualization	Display decision tree
+Conclusion
+
+Thus, the data classification process is successfully implemented using the Decision Tree classification algorithm in Python. The model classifies data into categories and predicts results with good accuracy.
