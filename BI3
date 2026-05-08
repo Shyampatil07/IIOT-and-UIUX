@@ -1,0 +1,168 @@
+Perform ETL Process to Construct Database in SQL Server / Power BI
+Theory (Write in Exam)
+Introduction
+
+Extract, Transform, Load (ETL) is a process used in data warehousing and business intelligence systems to:
+
+Extract data from different sources
+Transform the data into a suitable format
+Load the processed data into a target database or visualization tool
+
+ETL is widely used with:
+
+Microsoft SQL Server
+Microsoft Power BI
+ETL Process
+1. Extraction
+
+Data is collected from:
+
+Excel files
+CSV files
+SQL databases
+Oracle databases
+
+Example:
+
+students.xlsx
+employees.csv
+sales database
+2. Transformation
+
+The extracted data is:
+
+Cleaned
+Filtered
+Formatted
+Validated
+
+Operations performed:
+
+Remove null values
+Change data types
+Remove duplicates
+Standardize columns
+3. Loading
+
+The transformed data is loaded into:
+
+SQL Server database
+Power BI dashboard
+Data warehouse
+ETL Architecture
+Data Sources
+(Excel / CSV / Oracle)
+          ↓
+       Extract
+          ↓
+      Transform
+(Clean & Process Data)
+          ↓
+         Load
+(SQL Server / Power BI)
+Advantages of ETL
+Centralized data storage
+Improved reporting
+Faster data analysis
+Better business intelligence
+Supports decision making
+Python Program for ETL Process
+Required Libraries
+pip install pandas sqlalchemy pyodbc openpyxl
+Python ETL Code
+import pandas as pd
+from sqlalchemy import create_engine
+
+# -----------------------------------
+# EXTRACT
+# Read data from Excel file
+# -----------------------------------
+
+data = pd.read_excel("students.xlsx")
+
+print("Data Extracted Successfully")
+print(data)
+
+# -----------------------------------
+# TRANSFORM
+# Clean and process data
+# -----------------------------------
+
+# Remove null values
+data = data.dropna()
+
+# Remove duplicate rows
+data = data.drop_duplicates()
+
+# Convert column names to uppercase
+data.columns = data.columns.str.upper()
+
+print("\nTransformed Data")
+print(data)
+
+# -----------------------------------
+# LOAD
+# Load into SQL Server
+# -----------------------------------
+
+server = 'localhost'
+database = 'StudentDB'
+username = 'sa'
+password = 'password'
+
+connection_string = (
+    f"mssql+pyodbc://{username}:{password}"
+    f"@{server}/{database}"
+    "?driver=ODBC+Driver+17+for+SQL+Server"
+)
+
+engine = create_engine(connection_string)
+
+# Load table into SQL Server
+data.to_sql(
+    'STUDENT_DATA',
+    engine,
+    if_exists='replace',
+    index=False
+)
+
+print("\nData Loaded Successfully into SQL Server")
+Steps to Use in Power BI
+Step 1: Open Power BI
+
+Open Microsoft Power BI Desktop.
+
+Step 2: Get Data
+
+Click:
+
+Home → Get Data
+Step 3: Select SQL Server
+
+Choose:
+
+SQL Server Database
+Step 4: Enter Details
+
+Provide:
+
+Server name
+Database name
+
+Then click Load.
+
+Step 5: Create Visualization
+
+Use charts such as:
+
+Bar chart
+Pie chart
+Line graph
+Dashboard reports
+Sample Output
+Data Extracted Successfully
+Data Transformed
+Data Loaded Successfully into SQL Server
+Conclusion
+
+Thus, the ETL process successfully extracts data from source systems, transforms it into a clean format, and loads it into SQL Server / Power BI for reporting and visualization purposes.
