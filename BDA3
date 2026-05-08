@@ -1,0 +1,163 @@
+Matrix Multiplication using MapReduce
+Theory (Write in Exam)
+Introduction
+
+Matrix Multiplication is an important mathematical operation used in scientific computing, machine learning, graphics, and big data applications.
+
+MapReduce is a programming model used for processing large datasets in parallel using distributed systems such as Hadoop.
+
+In MapReduce, matrix multiplication is divided into two phases:
+
+Mapper Phase
+Reducer Phase
+Matrix Multiplication Concept
+
+Suppose:
+
+Matrix A:
+
+A = [aij]
+
+Matrix B:
+
+B = [bjk]
+
+Result Matrix C:
+
+C[i][k] = Σ (A[i][j] × B[j][k])
+
+The multiplication is performed by multiplying rows of Matrix A with columns of Matrix B.
+
+Working of MapReduce for Matrix Multiplication
+Mapper Phase
+Mapper reads elements of matrices A and B.
+Generates intermediate key-value pairs.
+Key represents the position (i,k) in result matrix.
+Value contains matrix identifier and element value.
+
+Example:
+
+((i,k), (A,j,value))
+((i,k), (B,j,value))
+Shuffle and Sort Phase
+Hadoop groups all values having the same key (i,k) together.
+Reducer Phase
+Reducer receives all elements related to one output cell.
+Multiplies corresponding elements.
+Computes the sum.
+Produces final matrix element.
+Advantages
+Efficient for large matrices.
+Parallel computation reduces execution time.
+Suitable for distributed systems and big data processing.
+Example
+
+Matrix A:
+
+1 2
+3 4
+
+Matrix B:
+
+5 6
+7 8
+
+Result Matrix:
+
+19 22
+43 50
+Mapper Program (Python)
+#!/usr/bin/env python3
+import sys
+
+# Matrix dimensions
+# A = 2x2
+# B = 2x2
+
+for line in sys.stdin:
+    line = line.strip()
+
+    # Input format:
+    # A,i,j,value
+    # B,i,j,value
+
+    matrix, i, j, value = line.split(',')
+
+    i = int(i)
+    j = int(j)
+    value = int(value)
+
+    if matrix == "A":
+        # Emit for all columns of B
+        for k in range(2):
+            print(f"{i},{k}\tA,{j},{value}")
+
+    else:
+        # Emit for all rows of A
+        for k in range(2):
+            print(f"{k},{j}\tB,{i},{value}")
+Reducer Program (Python)
+#!/usr/bin/env python3
+import sys
+from collections import defaultdict
+
+A = defaultdict(dict)
+B = defaultdict(dict)
+
+current_key = None
+
+for line in sys.stdin:
+    key, value = line.strip().split('\t')
+
+    if current_key and current_key != key:
+        i, k = map(int, current_key.split(','))
+
+        total = 0
+
+        for j in A:
+            if j in B:
+                total += A[j] * B[j]
+
+        print(f"({i},{k})\t{total}")
+
+        A.clear()
+        B.clear()
+
+    current_key = key
+
+    matrix, j, val = value.split(',')
+
+    if matrix == 'A':
+        A[int(j)] = int(val)
+    else:
+        B[int(j)] = int(val)
+
+# Final key processing
+if current_key:
+    i, k = map(int, current_key.split(','))
+
+    total = 0
+
+    for j in A:
+        if j in B:
+            total += A[j] * B[j]
+
+    print(f"({i},{k})\t{total}")
+Input File Format
+A,0,0,1
+A,0,1,2
+A,1,0,3
+A,1,1,4
+
+B,0,0,5
+B,0,1,6
+B,1,0,7
+B,1,1,8
+Expected Output
+(0,0)    19
+(0,1)    22
+(1,0)    43
+(1,1)    50
+Conclusion
+
+Thus, matrix multiplication can be efficiently implemented using the MapReduce programming model. The Mapper distributes matrix elements, while the Reducer computes the final multiplication results in parallel.
