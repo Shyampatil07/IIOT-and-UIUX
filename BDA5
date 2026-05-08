@@ -1,0 +1,131 @@
+MapReduce Program to Analyze Titanic Dataset
+Theory (Write in Exam)
+Introduction
+
+MapReduce is a programming model used for processing large datasets in parallel using distributed systems such as Hadoop.
+
+The Titanic dataset contains information about passengers such as:
+
+Gender
+Age
+Passenger class
+Survival status
+
+This MapReduce program performs two operations:
+
+Find the average age of male passengers who died
+Find the number of female passengers who died in each class
+Working of Program
+Mapper Phase
+
+The mapper:
+
+Reads Titanic dataset records.
+Filters:
+Male passengers who died.
+Female passengers who died.
+Emits:
+Age values for dead males.
+Class count for dead females.
+Reducer Phase
+
+The reducer:
+
+Calculates average age of dead males.
+Counts dead females in each passenger class.
+Titanic Dataset Fields Used
+Field	Meaning
+Sex	Male / Female
+Age	Passenger age
+Pclass	Passenger class
+Survived	0 = Dead, 1 = Alive
+Mapper Program (Python)
+#!/usr/bin/env python3
+import sys
+import csv
+
+reader = csv.reader(sys.stdin)
+
+# Skip header
+next(reader)
+
+for row in reader:
+
+    # Titanic CSV format
+    # PassengerId,Survived,Pclass,Name,Sex,Age,...
+
+    survived = row[1]
+    pclass = row[2]
+    sex = row[4]
+    age = row[5]
+
+    # Male passengers who died
+    if survived == '0' and sex.lower() == 'male':
+
+        if age != '':
+            print(f"male_age\t{age}")
+
+    # Female passengers who died
+    if survived == '0' and sex.lower() == 'female':
+
+        print(f"female_class_{pclass}\t1")
+Reducer Program (Python)
+#!/usr/bin/env python3
+import sys
+
+male_age_total = 0
+male_count = 0
+
+female_class_count = {}
+
+for line in sys.stdin:
+
+    key, value = line.strip().split('\t')
+
+    # Average age of dead males
+    if key == "male_age":
+
+        male_age_total += float(value)
+        male_count += 1
+
+    # Female deaths by class
+    elif key.startswith("female_class_"):
+
+        if key not in female_class_count:
+            female_class_count[key] = 0
+
+        female_class_count[key] += int(value)
+
+# Print average age
+if male_count > 0:
+    average_age = male_age_total / male_count
+    print(f"Average age of dead males = {average_age:.2f}")
+
+# Print female deaths in each class
+for key, count in female_class_count.items():
+
+    pclass = key.split('_')[-1]
+
+    print(f"Female deaths in Class {pclass} = {count}")
+Sample Input (Titanic CSV)
+PassengerId,Survived,Pclass,Name,Sex,Age
+1,0,3,Allen,male,35
+2,1,1,Anna,female,28
+3,0,2,Sophia,female,22
+4,0,1,John,male,40
+5,0,3,Emily,female,30
+Mapper Output
+male_age    35
+female_class_2    1
+male_age    40
+female_class_3    1
+Reducer Output
+Average age of dead males = 37.50
+Female deaths in Class 2 = 1
+Female deaths in Class 3 = 1
+Conclusion
+
+Thus, the MapReduce program successfully analyzes the Titanic dataset to:
+
+Calculate the average age of male passengers who died.
+Count the number of female passengers who died in each passenger class.
