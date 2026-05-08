@@ -1,0 +1,149 @@
+Import Data from Different Sources and Load into Target System
+Theory (Write in Exam)
+Introduction
+
+Extract, Transform, Load (ETL) is the process of extracting data from different sources, transforming it into a suitable format, and loading it into a target system such as a database or data warehouse.
+
+Organizations store data in multiple formats like:
+
+Excel files
+SQL Server databases
+Oracle databases
+CSV files
+Cloud storage
+
+Data integration combines these data sources into one centralized system for analysis and reporting.
+
+ETL Process
+1. Extract
+
+Data is collected from multiple sources such as:
+
+Microsoft Excel
+SQL Server
+Oracle Database
+2. Transform
+
+The extracted data is:
+
+Cleaned
+Filtered
+Formatted
+Converted into a common structure
+
+Example:
+
+Removing null values
+Changing date formats
+Standardizing column names
+3. Load
+
+The transformed data is loaded into:
+
+MySQL
+PostgreSQL
+Hadoop
+Data Warehouse
+Cloud database
+Architecture
+Excel / SQL Server / Oracle
+            ↓
+        Extraction
+            ↓
+      Data Transformation
+            ↓
+       Target Database
+Advantages
+Centralized data management
+Faster data analysis
+Better decision making
+Handles large datasets efficiently
+Python Program for Data Import and Load
+Required Libraries
+
+Install libraries:
+
+pip install pandas sqlalchemy pyodbc openpyxl cx_Oracle
+Python Code
+import pandas as pd
+from sqlalchemy import create_engine
+
+# -----------------------------------
+# 1. Read Data from Excel File
+# -----------------------------------
+
+excel_data = pd.read_excel("students.xlsx")
+
+print("Excel Data:")
+print(excel_data)
+
+# -----------------------------------
+# 2. Read Data from SQL Server
+# -----------------------------------
+
+sql_server_connection = create_engine(
+    "mssql+pyodbc://username:password@server/database?driver=ODBC+Driver+17+for+SQL+Server"
+)
+
+sql_data = pd.read_sql("SELECT * FROM employee", sql_server_connection)
+
+print("\nSQL Server Data:")
+print(sql_data)
+
+# -----------------------------------
+# 3. Read Data from Oracle Database
+# -----------------------------------
+
+oracle_connection = create_engine(
+    "oracle+cx_oracle://username:password@localhost:1521/?service_name=XE"
+)
+
+oracle_data = pd.read_sql("SELECT * FROM customer", oracle_connection)
+
+print("\nOracle Data:")
+print(oracle_data)
+
+# -----------------------------------
+# 4. Combine All Data
+# -----------------------------------
+
+combined_data = pd.concat(
+    [excel_data, sql_data, oracle_data],
+    ignore_index=True
+)
+
+print("\nCombined Data:")
+print(combined_data)
+
+# -----------------------------------
+# 5. Load into Target System (MySQL)
+# -----------------------------------
+
+target_connection = create_engine(
+    "mysql+pymysql://root:password@localhost/targetdb"
+)
+
+combined_data.to_sql(
+    "final_data",
+    target_connection,
+    if_exists='replace',
+    index=False
+)
+
+print("\nData loaded successfully into target system.")
+Explanation of Program
+Step	Description
+Read Excel	Imports data from Excel file
+Read SQL Server	Fetches records from SQL Server
+Read Oracle	Fetches records from Oracle DB
+Combine Data	Merges all datasets
+Load Data	Stores final data into target database
+Output
+Excel Data Loaded
+SQL Server Data Loaded
+Oracle Data Loaded
+Combined Data Created
+Data loaded successfully into target system
+Conclusion
+
+Thus, the program successfully imports data from multiple sources such as Excel, SQL Server, and Oracle databases, performs integration, and loads the final data into the target system using Python ETL processing.
