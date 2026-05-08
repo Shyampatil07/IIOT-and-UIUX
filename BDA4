@@ -1,0 +1,98 @@
+MapReduce Program to Find Grades of Students
+Theory (Write in Exam)
+Introduction
+
+MapReduce is a programming model used for processing large amounts of data in distributed systems such as Hadoop.
+
+It works in two phases:
+
+Mapper Phase
+Reducer Phase
+
+This program is used to calculate the grades of students based on their marks.
+
+Problem Statement
+
+Develop a MapReduce program to assign grades to students according to their marks.
+
+Grade Criteria
+Marks Range	Grade
+90 – 100	A
+75 – 89	B
+60 – 74	C
+40 – 59	D
+Below 40	F
+Working of Program
+Mapper Phase
+Reads student name and marks.
+Determines grade based on marks.
+Emits student name and grade.
+
+Example:
+
+Shyam    A
+Reducer Phase
+Collects mapper output.
+Displays final student grades.
+Advantages
+Fast processing of student records.
+Can handle large educational datasets.
+Parallel execution improves performance.
+Mapper Program (Python)
+#!/usr/bin/env python3
+import sys
+
+for line in sys.stdin:
+    line = line.strip()
+
+    # Input format:
+    # Name,Marks
+
+    name, marks = line.split(',')
+
+    marks = int(marks)
+
+    # Assign grades
+    if marks >= 90:
+        grade = 'A'
+    elif marks >= 75:
+        grade = 'B'
+    elif marks >= 60:
+        grade = 'C'
+    elif marks >= 40:
+        grade = 'D'
+    else:
+        grade = 'F'
+
+    print(f"{name}\t{grade}")
+Reducer Program (Python)
+#!/usr/bin/env python3
+import sys
+
+for line in sys.stdin:
+    line = line.strip()
+
+    name, grade = line.split('\t')
+
+    print(f"{name}\t{grade}")
+Input File Example
+Shyam,95
+Rahul,82
+Amit,67
+Neha,45
+Riya,30
+Mapper Output
+Shyam    A
+Rahul    B
+Amit     C
+Neha     D
+Riya     F
+Reducer Output
+Shyam    A
+Rahul    B
+Amit     C
+Neha     D
+Riya     F
+Conclusion
+
+Thus, the MapReduce program successfully assigns grades to students based on their marks using Mapper and Reducer phases in Python.
