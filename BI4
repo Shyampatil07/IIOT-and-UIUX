@@ -1,0 +1,206 @@
+# Data Analysis and Visualization using Advanced Excel (Python)
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# -----------------------------------
+# LOAD EXCEL FILE
+# -----------------------------------
+
+# Read Excel file
+data = pd.read_excel("sales_data.xlsx")
+
+print("Original Data:")
+print(data)
+
+# -----------------------------------
+# DATA ANALYSIS
+# -----------------------------------
+
+# Total Sales
+total_sales = data['Sales'].sum()
+print("\nTotal Sales:", total_sales)
+
+# Average Sales
+average_sales = data['Sales'].mean()
+print("Average Sales:", average_sales)
+
+# Maximum Sales
+max_sales = data['Sales'].max()
+print("Maximum Sales:", max_sales)
+
+# Minimum Sales
+min_sales = data['Sales'].min()
+print("Minimum Sales:", min_sales)
+
+# -----------------------------------
+# GROUP DATA
+# -----------------------------------
+
+# Product-wise sales summary
+product_sales = data.groupby('Product')['Sales'].sum()
+
+print("\nProduct Wise Sales:")
+print(product_sales)
+
+# -----------------------------------
+# DATA VISUALIZATION
+# -----------------------------------
+
+# Bar Chart
+plt.figure(figsize=(8,5))
+
+product_sales.plot(kind='bar')
+
+plt.title("Product Wise Sales")
+plt.xlabel("Product")
+plt.ylabel("Total Sales")
+
+plt.show()
+
+# -----------------------------------
+# PIE CHART
+# -----------------------------------
+
+plt.figure(figsize=(6,6))
+
+product_sales.plot(kind='pie', autopct='%1.1f%%')
+
+plt.title("Sales Distribution")
+
+plt.ylabel("")
+
+plt.show()
+Example Excel File (sales_data.xlsx)
+Product	Sales
+Laptop	50000
+Mobile	30000
+Tablet	20000
+Laptop	25000
+Mobile	15000
+Output
+Total Sales: 140000
+Average Sales: 28000
+Maximum Sales: 50000
+Minimum Sales: 15000
+
+The program:
+
+Reads data from Excel
+Performs data analysis
+Groups product-wise sales
+Creates Bar Chart and Pie Chart for visualization
+
+
+
+
+
+Data Analysis and Visualization using Advanced Excel
+Theory (Write in Exam)
+Introduction
+
+Microsoft Excel is a powerful spreadsheet application used for:
+
+Data analysis
+Data management
+Visualization
+Reporting
+Business intelligence
+
+Advanced Excel provides tools and features that help users analyze large datasets and create graphical visualizations for better decision making.
+
+Features of Advanced Excel
+Feature	Purpose
+Pivot Table	Summarize and analyze data
+Pivot Chart	Visual representation of Pivot Table
+VLOOKUP / XLOOKUP	Search data from tables
+Conditional Formatting	Highlight important values
+Data Validation	Restrict invalid data entry
+Charts & Graphs	Visualize data
+Filters & Sorting	Organize records
+What-If Analysis	Forecast and decision making
+Data Analysis in Advanced Excel
+1. Sorting and Filtering
+Sorting arranges data in ascending or descending order.
+Filtering displays only required records.
+
+Example:
+
+Sort sales from highest to lowest.
+Filter employees with salary > 50000.
+2. Pivot Table
+
+A Pivot Table summarizes large amounts of data quickly.
+
+Steps:
+Select data
+Go to Insert → Pivot Table
+Choose rows, columns, and values
+
+Example:
+
+Department-wise salary summary
+3. Formulas and Functions
+
+Common functions:
+
+Function	Use
+SUM()	Addition
+AVERAGE()	Average value
+COUNT()	Count records
+IF()	Logical condition
+VLOOKUP()	Search value
+MAX()/MIN()	Highest/Lowest value
+
+Example:
+
+=AVERAGE(B2:B10)
+4. Conditional Formatting
+
+Highlights important data automatically.
+
+Example:
+
+Highlight marks less than 40 in red.
+Highlight highest sales in green.
+Data Visualization in Excel
+Charts Used
+Chart Type	Purpose
+Bar Chart	Compare categories
+Line Chart	Show trends
+Pie Chart	Percentage distribution
+Histogram	Frequency analysis
+Scatter Plot	Relationship analysis
+Steps to Create Chart
+Select data
+Go to Insert tab
+Choose chart type
+Customize title, labels, colors
+
+Example:
+
+Insert → Charts → Bar Chart
+Example Dataset
+Product	Sales
+Laptop	50000
+Mobile	30000
+Tablet	20000
+Visualization
+
+A bar chart can show comparison of product sales.
+
+Advantages of Advanced Excel
+Easy data analysis
+Fast report generation
+Better visualization
+User-friendly interface
+Useful for business intelligence
+Applications
+Sales analysis
+Financial reporting
+Student result analysis
+Inventory management
+Business dashboards
+Conclusion
+
+Thus, Advanced Excel is an effective tool for data analysis and visualization. Features such as Pivot Tables, formulas, charts, and conditional formatting help users analyze and present data efficiently for better decision making.
