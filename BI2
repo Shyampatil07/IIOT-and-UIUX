@@ -1,0 +1,130 @@
+Data Visualization from ETL Process
+Theory (Write in Exam)
+Introduction
+
+Extract, Transform, Load (ETL) is the process of:
+
+Extracting data from different sources
+Transforming data into a proper format
+Loading data into a target system
+
+After ETL processing, Data Visualization is used to represent data graphically for better analysis and decision making.
+
+Visualization helps users understand:
+
+Trends
+Patterns
+Comparisons
+Business insights
+ETL Process with Visualization
+Data Sources
+(Excel, SQL Server, Oracle)
+            ↓
+         Extract
+            ↓
+       Transform
+(Clean, Filter, Format)
+            ↓
+           Load
+     (Target Database)
+            ↓
+     Data Visualization
+ (Charts, Graphs, Dashboards)
+Types of Data Visualization
+Visualization	Purpose
+Bar Chart	Compare values
+Line Chart	Show trends over time
+Pie Chart	Show percentage distribution
+Histogram	Show data frequency
+Scatter Plot	Show relationship between variables
+Advantages
+Easy understanding of large data
+Better business decisions
+Detect trends and anomalies
+Improves reporting efficiency
+Python Program for ETL and Data Visualization
+Required Libraries
+pip install pandas matplotlib openpyxl sqlalchemy
+Python Code
+import pandas as pd
+import matplotlib.pyplot as plt
+from sqlalchemy import create_engine
+
+# -----------------------------------
+# EXTRACT
+# Read data from Excel
+# -----------------------------------
+
+data = pd.read_excel("sales_data.xlsx")
+
+print("Extracted Data:")
+print(data)
+
+# -----------------------------------
+# TRANSFORM
+# Clean and process data
+# -----------------------------------
+
+# Remove null values
+data = data.dropna()
+
+# Convert column names to uppercase
+data.columns = data.columns.str.upper()
+
+print("\nTransformed Data:")
+print(data)
+
+# -----------------------------------
+# LOAD
+# Store data into target database
+# -----------------------------------
+
+engine = create_engine(
+    "sqlite:///sales_database.db"
+)
+
+data.to_sql(
+    "sales",
+    engine,
+    if_exists='replace',
+    index=False
+)
+
+print("\nData loaded successfully.")
+
+# -----------------------------------
+# DATA VISUALIZATION
+# -----------------------------------
+
+# Example: Sales by Product
+
+product_sales = data.groupby('PRODUCT')['SALES'].sum()
+
+plt.figure(figsize=(8,5))
+
+product_sales.plot(kind='bar')
+
+plt.title("Sales by Product")
+plt.xlabel("Product")
+plt.ylabel("Total Sales")
+
+plt.show()
+Explanation of Program
+Step	Description
+Extract	Reads data from Excel file
+Transform	Cleans and formats data
+Load	Stores data into database
+Visualization	Creates bar chart for analysis
+Sample Output
+Console Output
+Extracted Data Loaded
+Data Transformed
+Data loaded successfully
+Visualization Output
+Bar Chart showing Product vs Total Sales
+
+The graph displays total sales of each product visually using bars.
+
+Conclusion
+
+Thus, the ETL process successfully extracts, transforms, and loads data from source systems, and data visualization helps in analyzing the processed data effectively using graphical representation.
